@@ -11,7 +11,10 @@
 U8GLIB_SH1106_128X64  My_u8g_Panel(U8G_I2C_OPT_NONE); // I2C / TWI
 const byte ROWS = 4;
 const byte COLS = 4;
-int seconds = 60;
+int seconds = 59;
+int milliseconds = 99;
+unsigned long previousMillis;
+unsigned long currentMillis;
  
 char buttons[ROWS][COLS] = {
   {'1', '2', '3', 'A'},  // 1st row
@@ -36,26 +39,117 @@ const uint8_t all_off[] = {0x00, 0x00, 0x00, 0x00};  // 0xff is hex all 1s
 bool displayOn = true;
 
 
-int KeypadCheck() {
+char KeypadCheck() {
 
   char result = myAwesomePad.getKey();
  
-  if (result){                    // if a button is pressed
-    Serial.println(result);
-  }
-
   if (result == '1'){
+    draw_string_OLED("Button 1 Pressed.");
+    delay(100);
     draw_string_OLED("60 Second timer...");
-    seconds = 60;
+    seconds = 59;
+    milliseconds = 99;
+    previousMillis = millis();
   }
   if (result == '2'){
+    draw_string_OLED("Button 2 Pressed");
+    delay(100);
     draw_string_OLED("10 Second timer...");
-    seconds = 10;
+    seconds = 9;
+    milliseconds = 99;
+    previousMillis = millis();
   }
   if (result == '3'){
+    draw_string_OLED("Button 3 Pressed.");
+    delay(100);
     draw_string_OLED("5 Second timer...");
-    seconds = 5;
+    seconds = 4;
+    milliseconds = 99;
+    previousMillis = millis();
   }
+  if (result == '4'){
+    draw_string_OLED("Button 4 Pressed.");
+    delay(100);
+    draw_string_OLED("Welcome to my");
+    delay(100);
+    draw_string_OLED("Arduino program.");
+    delay(100);
+    draw_string_OLED("programmed in");
+    delay(100);
+    draw_string_OLED("C++ by ");
+    delay(100);
+    draw_string_OLED("Michael Iwanek");
+    delay(100);
+    seconds = 0;
+    milliseconds = 0;
+    previousMillis = millis();
+  }
+    if (result == '5'){
+      draw_string_OLED("Button 5 Pressed.");
+      delay(100);
+      draw_string_OLED("Generating prime");
+      delay(100);
+      draw_string_OLED("numbers from ");
+      delay(100);
+      draw_string_OLED("1 to 9999.");
+      delay(100);
+      draw_string_OLED("Press 1");
+      delay(100);
+      draw_string_OLED("to exit.");
+      delay(200);
+
+      int PrimeInteger = 0;
+
+      while (PrimeInteger < 9999) {
+        if (isPrime(PrimeInteger)){
+          myDisplay.showNumberDec(PrimeInteger);
+          delay(500);
+          char result2 = myAwesomePad.getKey();
+          if (result2 == '1'){
+            break;
+          }
+
+        }
+        PrimeInteger ++;
+      }
+
+      seconds = 0;
+      milliseconds = 0;
+      previousMillis = millis();
+  }
+  if (result == '6'){
+      draw_string_OLED("Button 6 Pressed.");
+      delay(100);
+      draw_string_OLED("Generating powers");
+      delay(100);
+      draw_string_OLED("of 2.");
+      delay(100);
+      draw_string_OLED("Press 1");
+      delay(100);
+      draw_string_OLED("to exit.");
+      delay(200);
+
+  int Power = 0;
+  int Raise = 1;  // 2^0 = 1
+
+  while (Raise < 9999) {
+    delay(500);
+    Power++;
+    Raise = 1 << Power;  // Use bit-shifting for powers of 2
+    myDisplay.showNumberDec(Raise);
+
+    char result2 = myAwesomePad.getKey();
+    if (result2 == '1') {
+      break;
+    }
+  }
+
+      seconds = 0;
+      milliseconds = 0;
+      previousMillis = millis();
+  }
+
+  return result;
 
 }
 
@@ -114,38 +208,49 @@ void loop() {
   // put your main code here, to run repeatedly:
   myDisplay.setBrightness(7);
   myDisplay.setSegments(all_on);
-  delay(1);
+  delay(10);
   myDisplay.clear();
 
   
-  int milliseconds = 99;
+  milliseconds = 99;
   int displayValue;
-  seconds = 60;
+  seconds = 59;
+  char result = '4';
 
   draw_string_OLED("Starting timer...");
+  delay(100);
+  draw_string_OLED("for 60 seconds.");
+
+  previousMillis = millis();
 
   while (seconds >= 0) {
     
-    KeypadCheck();
+    char result = KeypadCheck();
     displayValue = seconds * 100 + milliseconds;
 
     // Display the value on the 7-segment display
     myDisplay.showNumberDec(displayValue);
 
-    // Delay for 10 ms
-    delay(100);
-    KeypadCheck();
-    // Update milliseconds and seconds
-    milliseconds -= 10;
-    if (milliseconds < 0) {
-      milliseconds = 99;  // Reset milliseconds to 750 when it goes below 0
-      seconds--;  // Decrement seconds when milliseconds roll over
+    // Check if 10 milliseconds have passed
+    currentMillis = millis();
+    if (currentMillis - previousMillis) {
+        // Update milliseconds and seconds
+        milliseconds -= ((currentMillis - previousMillis) / 10) ;
+        if (milliseconds < 0) {
+            milliseconds = 99;  // Reset milliseconds to 750 when it goes below 0
+            seconds--;  // Decrement seconds when milliseconds roll over
+        }
+        previousMillis = currentMillis;  // Save the current time for the next iteration
     }
+
+
   }
 
   myDisplay.setSegments(all_off);
 
+if (result != '4'){
   draw_string_OLED("Finished timer!!");
+}
 
   }
   else{
@@ -174,5 +279,14 @@ void clear_screen(void) {
   } while( My_u8g_Panel.nextPage() );    
 }
 
+bool isPrime(unsigned long num) {
+    if (num <= 1) return false;
 
+    for (unsigned long i = 2; i * i <= num; i++) {
+        if (num % i == 0) {
+            return false;
+        }
+    }
 
+    return true;
+}
