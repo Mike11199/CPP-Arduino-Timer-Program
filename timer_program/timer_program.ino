@@ -161,103 +161,50 @@ void setup() {
 }
 
 void loop() {
-
-    // put your setup code here, to run once:
+  
   myDisplay.clear();
   delay(1000);
   displayOn = true;
-  
-  const uint8_t hi_1[] = {
-    SEG_E,
-    0,
-    0,
-    0,
-  };
-
-  const uint8_t hi_2[] = {
-    SEG_B | SEG_C | SEG_F | SEG_E | SEG_G,
-    SEG_E,
-    0,
-    0,
-  };
-
-    const uint8_t hi_3[] = {
-    0,
-    SEG_B | SEG_C | SEG_F | SEG_E | SEG_G,
-    SEG_E,
-    0,
-  };
-
-    const uint8_t hi_4[] = {
-    0,
-    0,
-    SEG_B | SEG_C | SEG_F | SEG_E | SEG_G,
-    SEG_E,
-  };
-
-    const uint8_t hi_5[] = {
-    0,
-    0,
-    0,
-    SEG_B | SEG_C | SEG_F | SEG_E | SEG_G,
-  };
-
 
   if (displayOn == true) {
+    myDisplay.setBrightness(7);
+    myDisplay.setSegments(all_on);
+    delay(10);
+    myDisplay.clear();
 
-  // put your main code here, to run repeatedly:
-  myDisplay.setBrightness(7);
-  myDisplay.setSegments(all_on);
-  delay(10);
-  myDisplay.clear();
+    milliseconds = 99;
+    int displayValue;
+    seconds = 59;
+    char result = '4';
 
-  
-  milliseconds = 99;
-  int displayValue;
-  seconds = 59;
-  char result = '4';
+    draw_string_OLED("Starting timer...");
+    delay(100);
+    draw_string_OLED("for 60 seconds.");
 
-  draw_string_OLED("Starting timer...");
-  delay(100);
-  draw_string_OLED("for 60 seconds.");
+    previousMillis = millis();
 
-  previousMillis = millis();
-
-  while (seconds >= 0) {
-    
-    char result = KeypadCheck();
-    displayValue = seconds * 100 + milliseconds;
-
-    // Display the value on the 7-segment display
-    myDisplay.showNumberDec(displayValue);
-
-    // Check if 10 milliseconds have passed
-    currentMillis = millis();
-    if (currentMillis - previousMillis) {
-        // Update milliseconds and seconds
-        milliseconds -= ((currentMillis - previousMillis) / 10) ;
-        if (milliseconds < 0) {
-            milliseconds = 99;  // Reset milliseconds to 750 when it goes below 0
-            seconds--;  // Decrement seconds when milliseconds roll over
-        }
-        previousMillis = currentMillis;  // Save the current time for the next iteration
-    }
-
-
+    while (seconds >= 0) {
+      
+      char result = KeypadCheck();
+      displayValue = seconds * 100 + milliseconds;
+      myDisplay.showNumberDec(displayValue);
+      
+      currentMillis = millis();
+      if (currentMillis - previousMillis) {          
+          milliseconds -= ((currentMillis - previousMillis) / 10) ;
+          if (milliseconds < 0) {
+              milliseconds = 99;  
+              seconds--;  
+          }
+          previousMillis = currentMillis;  // Save the current time for the next iteration
+      }
   }
 
+  if (result != '4'){
+    draw_string_OLED("Finished timer!!");
+  }
   myDisplay.setSegments(all_off);
-
-if (result != '4'){
-  draw_string_OLED("Finished timer!!");
-}
-
   }
-  else{
-    myDisplay.setSegments(all_off);
-  }
-
-
 }
 
 // OLED Display output
