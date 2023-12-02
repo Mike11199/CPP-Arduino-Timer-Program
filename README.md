@@ -1,9 +1,10 @@
-# arduino_timer_program
+# C++ Arduino Timer Program
 
-https://youtube.com/shorts/0ko66wMUzYo 
+10 Second Timer Video:
+https://www.youtube.com/shorts/YjFQXhdc6s0
 
-https://youtube/YjFQXhdc6s0?si=5g5hKYnhVfRKRquh
-
+Timer and Functions Video:
+https://www.youtube.com/shorts/YjFQXhdc6s0 
 
 ![image](https://github.com/Mike11199/arduino_timer_program/assets/91037796/29c2949a-68c8-4b01-8518-03dd9bf6e833)
 
