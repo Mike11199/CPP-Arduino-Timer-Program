@@ -2,7 +2,7 @@
 #include <TM1637Display.h>
 #include <Keypad.h>
 #include <U8glib.h>
-
+#include <Key.h>
 
 #define CLK 3  // clock 
 #define DIO 2  // digital audio
@@ -15,6 +15,15 @@ int seconds = 59;
 int milliseconds = 99;
 unsigned long previousMillis;
 unsigned long currentMillis;
+
+int buzzer = 4;             // pin 4 drives the buzzer
+int tones[ROWS][COLS] = {   // a frequency tone for each button
+    {31, 93, 147, 208},
+    {247, 311, 370, 440},
+    {523, 587, 698, 880},
+    {1397, 2637, 3729, 4978}
+};
+
  
 char buttons[ROWS][COLS] = {
   {'1', '2', '3', 'A'},  // 1st row
@@ -44,6 +53,7 @@ char KeypadCheck() {
   char result = myAwesomePad.getKey();
  
   if (result == '1'){
+    tone(buzzer, 350, 250);  // ... and play the tone frequency 200hz for a half second 500 ms
     draw_string_OLED("Button 1 Pressed.");
     delay(100);
     draw_string_OLED("60 Second timer...");
@@ -52,6 +62,7 @@ char KeypadCheck() {
     previousMillis = millis();
   }
   if (result == '2'){
+    tone(buzzer, 350, 250);  // ... and play the tone frequency 200hz for a half second 500 ms
     draw_string_OLED("Button 2 Pressed");
     delay(100);
     draw_string_OLED("10 Second timer...");
@@ -60,6 +71,7 @@ char KeypadCheck() {
     previousMillis = millis();
   }
   if (result == '3'){
+    tone(buzzer, 350, 250);  // ... and play the tone frequency 200hz for a half second 500 ms
     draw_string_OLED("Button 3 Pressed.");
     delay(100);
     draw_string_OLED("5 Second timer...");
@@ -68,6 +80,7 @@ char KeypadCheck() {
     previousMillis = millis();
   }
   if (result == '4'){
+    tone(buzzer, 350, 250);  // ... and play the tone frequency 200hz for a half second 500 ms
     draw_string_OLED("Button 4 Pressed.");
     delay(100);
     draw_string_OLED("Welcome to my");
@@ -85,6 +98,7 @@ char KeypadCheck() {
     previousMillis = millis();
   }
     if (result == '5'){
+      tone(buzzer, 350, 250);  // ... and play the tone frequency 200hz for a half second 500 ms
       draw_string_OLED("Button 5 Pressed.");
       delay(100);
       draw_string_OLED("Generating prime");
@@ -118,6 +132,7 @@ char KeypadCheck() {
       previousMillis = millis();
   }
   if (result == '6'){
+    tone(buzzer, 350, 250);  // ... and play the tone frequency 200hz for a half second 500 ms
       draw_string_OLED("Button 6 Pressed.");
       delay(100);
       draw_string_OLED("Generating powers");
@@ -166,6 +181,18 @@ void loop() {
   delay(1000);
   displayOn = true;
 
+  tone(buzzer, 50, 500);  // ... and play the tone frequency 50hz for a half second 500 ms
+  delay(500);
+  noTone(buzzer);
+
+  tone(buzzer, 150, 500);  // ... and play the tone frequency 150hz for a half second 500 ms
+  delay(500);
+  noTone(buzzer);
+
+  tone(buzzer, 200, 500);  // ... and play the tone frequency 200hz for a half second 500 ms
+  delay(500);
+  noTone(buzzer);
+
   if (displayOn == true) {
     myDisplay.setBrightness(7);
     myDisplay.setSegments(all_on);
@@ -190,19 +217,45 @@ void loop() {
       myDisplay.showNumberDec(displayValue);
       
       currentMillis = millis();
+      
+      
+
       if (currentMillis - previousMillis) {          
           milliseconds -= ((currentMillis - previousMillis) / 10) ;
           if (milliseconds < 0) {
               milliseconds = 99;  
               seconds--;  
+              tone(buzzer, 140, 300);  // ... and play the tone frequency 140hz for a half second 500 ms
+
+              if ( seconds < 5){
+                tone(buzzer, 350, 250);  // ... and play the tone frequency 200hz for a half second 500 ms
+                
+                tone(buzzer, 450, 250);  // ... and play the tone frequency 200hz for a half second 500 ms
+                
+                tone(buzzer, 450, 250);  // ... and play the tone frequency 200hz for a half second 500 ms
+                
+                tone(buzzer, 450, 250);  // ... and play the tone frequency 200hz for a half second 500 ms
+              }
           }
           previousMillis = currentMillis;  // Save the current time for the next iteration
       }
   }
 
-  if (result != '4'){
-    draw_string_OLED("Finished timer!!");
-  }
+  draw_string_OLED("Finished timer!!");
+  delay(500);
+
+  tone(buzzer, 650, 500);  // ... and play the tone frequency 650hz for a half second 500 ms
+  delay(500);
+  noTone(buzzer);
+
+  tone(buzzer, 450, 500);  // ... and play the tone frequency 450hz for a half second 500 ms
+  delay(500);
+  noTone(buzzer);
+
+  tone(buzzer, 300, 500);  // ... and play the tone frequency 300hz for a half second 500 ms
+  delay(500);
+  noTone(buzzer);
+
   myDisplay.setSegments(all_off);
   }
 }
