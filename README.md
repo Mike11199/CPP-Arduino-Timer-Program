@@ -1,7 +1,7 @@
 # C++ Arduino Timer Program
 
 10 Second Timer Video:
-https://www.youtube.com/shorts/YjFQXhdc6s0
+https://www.youtube.com/shorts/a_6E8YJwi90
 
 Timer and Functions Video:
 https://www.youtube.com/shorts/YjFQXhdc6s0 
