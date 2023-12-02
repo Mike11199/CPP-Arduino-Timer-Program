@@ -1,6 +1,6 @@
 # C++ Arduino Timer Program
 
-10 Second Timer Video:
+60 Second Timer Video:
 https://www.youtube.com/shorts/a_6E8YJwi90
 
 Timer and Functions Video:
